@@ -1,3 +1,4 @@
+import logging
 from joblib import load
 import urllib.request
 from flask import Flask, redirect, render_template, url_for, request
@@ -38,6 +39,10 @@ def index():
 
 if __name__ == '__main__':
     app.run()
+    if app.config['LOG_WITH_GUNICORN']:
+        gunicorn_error_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers.extend(gunicorn_error_logger.handlers)
+        app.logger.setLevel(logging.DEBUG)
     # Production
     http_server = WSGIServer((), app)
     http_server.serve_forever()
