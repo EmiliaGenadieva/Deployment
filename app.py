@@ -6,8 +6,10 @@ import json
 from wsgiref.simple_server import WSGIServer
 
 app = Flask(__name__)
-file = 'https://firebasestorage.googleapis.com/v0/b/proplisting-b1b6b.appspot.com/o/filename.skops?alt=media&token=657aee24-a6bf-4694-b045-59855ff0944d'
+
+file = 'https://firebasestorage.googleapis.com/v0/b/inappvegetarian.appspot.com/o/filename.skops?alt=media&token=787bbd34-a73f-4175-a004-5196f8698231'
 clf = load(urllib.request.urlopen(file))
+
 
 @app.route('/dict')
 def jprint(living, bedrooms, surface):
