@@ -39,5 +39,5 @@ def index():
 if __name__ == '__main__':
     app.run()
     # Production
-    http_server = WSGIServer(('', 5000), app)
+    http_server = WSGIServer((), app)
     http_server.serve_forever()
