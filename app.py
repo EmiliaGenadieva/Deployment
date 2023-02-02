@@ -6,7 +6,7 @@ from wsgiref.simple_server import WSGIServer
 
 
 app = Flask(__name__)
-file = 'https://firebasestorage.googleapis.com/v0/b/proplisting-b1b6b.appspot.com/o/filename.joblib?alt=media&token=da50536f-ba53-44b8-8f74-4e0a40547eb1'
+file = 'https://firebasestorage.googleapis.com/v0/b/proplisting-b1b6b.appspot.com/o/filename.skops?alt=media&token=657aee24-a6bf-4694-b045-59855ff0944d'
 clf = load(urllib.request.urlopen(file))
 
 @app.route('/dict')
