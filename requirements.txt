@@ -2,8 +2,4 @@ joblib==1.2.0
 urllib3==1.26.13
 Werkzeug==2.2.2
 Flask==2.2.2
-<<<<<<< HEAD
 gunicorn==20.1.10
-=======
-gunicorn==20.1.10
->>>>>>> af5c6c8d2060527d57cd3e831a7a457f8a13779c
