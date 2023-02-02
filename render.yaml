@@ -1,7 +1,7 @@
 services:
   - type: web
     name: de
-    env: deployment
+    env: blitz
     plan: free
     buildCommand: yarn --frozen-lockfile --prod=false && blitz build
     startCommand: blitz start -p ${PORT}
