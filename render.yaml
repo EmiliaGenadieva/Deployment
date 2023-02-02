@@ -1,5 +1,5 @@
 services:
   - type: web
-    name: deployment
+    name: Deployment.app
     plan: free
-    env: Python 3
+    env: Python
