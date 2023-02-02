@@ -1,12 +1,7 @@
 services:
   - type: web
-    name: de
-    env: blitz
-    plan: free
-    buildCommand: yarn --frozen-lockfile --prod=false && blitz build
-    startCommand: blitz start -p ${PORT}
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: SESSION_SECRET_KEY
-        generateValue: true
+scaling:
+  minInstances: 1
+  maxInstances: 3
+  targetMemoryPercent: 60 # optional if targetCPUPercent is set (valid: 1-90)
+  targetCPUPercent: 60 
