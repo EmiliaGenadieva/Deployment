@@ -2,4 +2,4 @@ services:
   - type: web
     name: deployment
     plan: free
-    env: docker
+    env: Python 3
