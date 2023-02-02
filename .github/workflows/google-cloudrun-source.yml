@@ -13,8 +13,6 @@
 #    Cloud Build          cloudbuild.googleapis.com
 #    Artifact Registry    artifactregistry.googleapis.com
 #
-# 2. Create and configure Workload Identity Federation for GitHub (https://github.com/google-github-actions/auth#setting-up-workload-identity-federation)
-#
 # 3. Ensure the required IAM permissions are granted
 #
 #    Cloud Run
