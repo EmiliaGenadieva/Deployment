@@ -5,7 +5,6 @@ from flask import Flask, redirect, render_template, url_for, request
 import json
 from wsgiref.simple_server import WSGIServer
 
-
 app = Flask(__name__)
 file = 'https://firebasestorage.googleapis.com/v0/b/proplisting-b1b6b.appspot.com/o/filename.skops?alt=media&token=657aee24-a6bf-4694-b045-59855ff0944d'
 clf = load(urllib.request.urlopen(file))
@@ -39,10 +38,10 @@ def index():
 
 if __name__ == '__main__':
     app.run()
+    # Production
+    http_server = WSGIServer((), app)
+    http_server.serve_forever()
     if app.config['LOG_WITH_GUNICORN']:
         gunicorn_error_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers.extend(gunicorn_error_logger.handlers)
         app.logger.setLevel(logging.DEBUG)
-    # Production
-    http_server = WSGIServer((), app)
-    http_server.serve_forever()
