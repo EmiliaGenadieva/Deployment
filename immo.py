@@ -2,11 +2,12 @@ from joblib import load
 import urllib.request
 from flask import Flask, redirect, render_template, url_for, request
 import json
+from wsgiref.simple_server import WSGIServer
 
 
 app = Flask(__name__)
-app.secret_key = ''
-clf = load(urllib.request.urlopen("https://firebasestorage.googleapis.com/v0/b/inappvegetarian.appspot.com/o/filename.joblib?alt=media&token=2ce49114-6300-4bb8-a59d-653dc8f8bca8"))
+file = 'https://firebasestorage.googleapis.com/v0/b/proplisting-b1b6b.appspot.com/o/filename.joblib?alt=media&token=da50536f-ba53-44b8-8f74-4e0a40547eb1'
+clf = load(urllib.request.urlopen(file))
 
 @app.route('/dict')
 def jprint(living, bedrooms, surface):
@@ -36,4 +37,5 @@ def index():
         return render_template('index.html', record = record)
 
 if __name__ == '__main__':
-    app.run(threaded=True)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
