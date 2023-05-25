@@ -38,6 +38,13 @@ def index():
         record = {"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
         return render_template('index.html', record = record)
 
+@app.route('/charts')
+def home():
+    if request.method == 'GET':
+        return render_template('charts.html')
+
+
+
 if __name__ == '__main__':
     app.run()
     # Production
