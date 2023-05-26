@@ -6,6 +6,7 @@ import json
 import plotly
 import plotly.express as px
 import requests
+from bs4 import BeautifulSoup
 from wsgiref.simple_server import WSGIServer
 
 app = Flask(__name__)
