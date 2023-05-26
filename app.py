@@ -23,6 +23,9 @@ def jprint(living, bedrooms, surface):
 def home(price):
     if request.method == 'GET':
         return render_template('home.html', price = price)
+    elif request.method == 'POST':
+        return render_template('notdash2.html')
+    return render_template('home.html', price = price)
 
 @app.route('/',methods = ['POST', 'GET'])
 @app.route('/index')
