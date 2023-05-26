@@ -3,6 +3,9 @@ from joblib import load
 import urllib.request
 from flask import Flask, redirect, render_template, url_for, request
 import json
+import plotly
+import plotly.express as px
+import requests
 from wsgiref.simple_server import WSGIServer
 
 app = Flask(__name__)
