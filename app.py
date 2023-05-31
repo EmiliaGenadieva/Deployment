@@ -5,6 +5,7 @@ from flask import Flask, redirect, render_template, url_for, request
 import json
 import plotly
 import plotly.express as px
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from wsgiref.simple_server import WSGIServer
