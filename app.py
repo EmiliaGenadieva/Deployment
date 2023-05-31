@@ -43,7 +43,7 @@ def chart3():
         tax = request.args.get('tax')
         bonus = request.args.get('bonus')
         record = {"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
-        return render_template('index.html', record = record)
+        return render_template('index1.html', record = record)
 
 @app.route('/charts', methods = ['POST', 'GET'])
 def charts():
@@ -77,7 +77,7 @@ def index():
         The rumor that vegetarians are having a hard time in London and Madrid can probably not be
         explained by this chart.
         """
-        return render_template('notdash2.html', graphJSON=graphJSON, header=header,description=description)
+        return render_template('index.html', graphJSON=graphJSON, header=header,description=description)
 
 
 if __name__ == '__main__':
