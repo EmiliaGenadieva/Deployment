@@ -24,12 +24,11 @@ def jprint(living, bedrooms, surface):
 def home(price):
     if request.method == 'GET':
         return render_template('home.html', price = price)
-    elif request.method == 'POST':
-        return render_template('notdash2.html')
     return render_template('home.html', price = price)
 
-@app.route('/chart3')
-def chart3():
+@app.route('/', methods = ['POST', 'GET'])
+@app.route('/index')
+def index():
     if request.method == 'POST':
         salary = request.form['salary']
         tax =  request.form['tax']
@@ -43,16 +42,16 @@ def chart3():
         tax = request.args.get('tax')
         bonus = request.args.get('bonus')
         record = {"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
-        return render_template('index1.html', record = record)
+        return render_template('index.html', record = record)
 
 @app.route('/charts', methods = ['POST', 'GET'])
 def charts():
     if request.method == 'GET':
         return render_template('charts.html')
 
-@app.route('/', methods = ['POST', 'GET'])
-@app.route('/index')
-def index():
+
+@app.route('/chart3', methods = ['POST', 'GET'])
+def chart3():
     if request.method == 'GET':
         url = 'https://www.internetlivestats.com/total-number-of-websites/'
         s = requests.Session()
