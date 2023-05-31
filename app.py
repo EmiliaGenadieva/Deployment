@@ -76,7 +76,7 @@ def chart3():
         The rumor that vegetarians are having a hard time in London and Madrid can probably not be
         explained by this chart.
         """
-        return render_template('index.html', graphJSON=graphJSON, header=header,description=description)
+        return render_template('chart3.html', graphJSON=graphJSON, header=header,description=description)
 
 
 if __name__ == '__main__':
