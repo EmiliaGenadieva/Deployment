@@ -27,7 +27,6 @@ def home(price):
         return render_template('notdash2.html')
     return render_template('home.html', price = price)
 
-@app.route('/',methods = ['POST', 'GET'])
 @app.route('/chart3')
 def chart3():
     if request.method == 'POST':
