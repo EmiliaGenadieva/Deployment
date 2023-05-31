@@ -1,5 +1,6 @@
 # Deployment
-This repo contains code files needed for the task : <b>Deploy a web-service to Render.</b>
+This repo contains code files needed for the task : <b>Deploy a web-service to Render.</b></br>
+To see the deployed repository, please visit [Render Website](https://immo-s11x.onrender.com/)
 ## Task description:
 - Deploy API endpoint to the web. Show the results after querying the API in json format.
 - Use web technology Flask to process the request from the input fields and display the results.
@@ -21,6 +22,7 @@ Needed are at least 2 web pages found as : [home.html](/templates/home.html) and
 - code is first tested locally by running Flask server
 - code was tested with gunicorn
 - created repository in Github and connected the repository to Render.com
+#### Conclusion:
 > The Render Webplatform is easy to use and gives documentation how to deploy.
 > There is example how to create the render.yaml file. 
 > After creating the web-service one can preview how the image is processed and see errors as well as missing requirements.
