@@ -52,7 +52,7 @@ def charts():
 @app.route('/', methods = ['POST', 'GET'])
 @app.route('/index')
 def index():
-    if request.method == 'GET':
+    if request.method == 'POST':
         url = 'https://www.internetlivestats.com/total-number-of-websites/'
         s = requests.Session()
         response = s.get(url, timeout=10)
