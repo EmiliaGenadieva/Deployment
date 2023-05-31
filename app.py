@@ -50,6 +50,7 @@ def charts():
     if request.method == 'GET':
         return render_template('charts.html')
 
+@app.route('/',methods = ['POST', 'GET'])
 @app.route('/chart3')
 def chart3():
     url = 'https://www.internetlivestats.com/total-number-of-websites/'
