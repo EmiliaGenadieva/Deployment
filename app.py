@@ -28,8 +28,8 @@ def home(price):
     return render_template('home.html', price = price)
 
 @app.route('/',methods = ['POST', 'GET'])
-@app.route('/index')
-def index():
+@app.route('/chart3')
+def chart3():
     if request.method == 'POST':
         salary = request.form['salary']
         tax =  request.form['tax']
@@ -51,8 +51,8 @@ def charts():
         return render_template('charts.html')
 
 @app.route('/', methods = ['POST', 'GET'])
-@app.route('/chart3')
-def chart3():
+@app.route('/index')
+def index():
     if request.method == 'GET':
         url = 'https://www.internetlivestats.com/total-number-of-websites/'
         s = requests.Session()
