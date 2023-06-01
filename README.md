@@ -1,5 +1,5 @@
 # Deployment
-This repo contains code files needed for the task : <b>Deploy a web-service to Render.</b></br>
+This repo contains code files delivered for the task : <b>Deploy a web-service to Render.</b></br>
 To see the deployed repository, please visit [Render Website](https://immo-s11x.onrender.com/)
 ## Task description:
 - Deploy API endpoint to the web. Show the results after querying the API in json format.
@@ -11,7 +11,9 @@ To see the deployed repository, please visit [Render Website](https://immo-s11x.
 Needed are at least 2 web pages found as : [home.html](/templates/home.html) and [index.html](/templates/index.html)
  1. index.html takes the input values from the form.
  2. These values are processed in the python file from the pretrained ML model and a prediction is printed back in home.html (in this html code the value is in the header so it can be noticed quicker)
-- The output of json can be displayed after choosing web-service url /dict 
+- The output of json can be displayed after choosing web-service url /dict
+- There are more web pages added to show some charts: chart with Javascript library, chart from web scraping.
+
 ## List of requirements to deploy to Render:
 - requirements.txt : install the necessary Python packages
 - render.yaml : configuration file

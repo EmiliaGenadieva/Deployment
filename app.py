@@ -1,7 +1,6 @@
 import logging
 from joblib import load
 import urllib.request
-from flask import Flask, redirect, render_template, url_for, request
 import json
 import plotly
 import plotly.express as px
@@ -9,25 +8,37 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from wsgiref.simple_server import WSGIServer
+from flask import Flask, redirect, render_template, url_for, request
 
 app = Flask(__name__)
-
+# define ML Model saved on Firebase storage
 file = 'https://firebasestorage.googleapis.com/v0/b/inappvegetarian.appspot.com/o/filename.skops?alt=media&token=787bbd34-a73f-4175-a004-5196f8698231'
 clf = load(urllib.request.urlopen(file))
 
+# declare the main route of the app
+@app.route('/', methods = ['POST', 'GET'])
+def home0():
+    if request.method == 'GET':
+        return render_template('home.html')     
+    return render_template('home.html')
 
+# route to print the API response of the predicted prices and their values
 @app.route('/dict')
 def jprint(living, bedrooms, surface):
     return json.dumps({"Living_area": living, "Bedrooms": bedrooms, "Surface_plot": surface}, sort_keys=True, indent=4)
 
+# declare route to the result of the price
 @app.route('/home/<price>', methods = ['POST', 'GET'])
 def home(price):
     if request.method == 'GET':
-        return render_template('home.html', price = price)
+        if price == None:
+            return render_template('index.html', price = price)
+        else:
+            return render_template('home.html', price = price)
     return render_template('home.html', price = price)
 
-@app.route('/', methods = ['POST', 'GET'])
-@app.route('/index')
+# declare route to get values of the form to calculate the predicted price
+@app.route('/index', methods = ['POST', 'GET'])
 def index():
     if request.method == 'POST':
         salary = request.form['salary']
@@ -44,12 +55,13 @@ def index():
         record = {"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
         return render_template('index.html', record = record)
 
+# route to Google charts example
 @app.route('/charts', methods = ['POST', 'GET'])
 def charts():
     if request.method == 'GET':
         return render_template('charts.html')
 
-
+# route which directs to web scraping charts example
 @app.route('/chart3', methods = ['POST', 'GET'])
 def chart3():
     if request.method == 'GET':
@@ -71,9 +83,9 @@ def chart3():
         df['Websites'] = pd.to_numeric(df['Websites'])
         fig = px.bar(df[:-1], x="Year (June)", y="Websites", barmode = 'group')
         graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-        header="Vegetables in Europe"
+        header="Distribution online Webpages"
         description = """
-        The rumor that vegetarians are having a hard time in London and Madrid can probably not be
+        The idea that the number of webpages is decreasing can probably not be
         explained by this chart.
         """
         return render_template('chart3.html', graphJSON=graphJSON, header=header,description=description)
