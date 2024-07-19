@@ -1,0 +1,111 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add React in One Minute</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Import the webpage's stylesheet -->
+    <link rel="stylesheet" href="static/style.css">
+  </head>
+  <body>
+    <h1>Multiple image detection with VGG in TensorFlow.js using saved model.</h1>
+    <h2>Webcam continuous image classification</h2>
+      <p>Hold face close to your webcam to get a real-time classification! When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window)</p>
+    <section>
+      <div id="liveView" class="videoView">
+        <button id="webcamButton">Enable Webcam</button>
+        <video id="webcam" autoplay></video>
+      </div>
+    </section>
+    
+    <!-- home.html -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+    <script>
+  // Load your TensorFlow.js model
+    async function loadModel() {
+        const model = await tf.loadLayersModel('/static/tensorflowjs/model.json');
+        return model;
+    }
+
+// Preprocess an image
+function preprocessImage(image) {
+  // ... (resize, normalize, etc.)
+  const resizedImage = tf.image.resizeBilinear(image, [48, 48]); // Resize to 48x48
+  const normalizedImage = resizedImage.div(tf.scalar(255)); // Normalize to [0, 1]
+  const reshapedImage = normalizedImage.reshape([1, 48, 48, 1]); // Add batch dimension
+  return reshapedImage;
+}
+
+// Make a prediction
+async function predictEmotion(image) {
+  const model = await loadModel();
+  const preprocessedImage = preprocessImage(image);
+  const prediction = model.predict(tf.tensor(preprocessedImage));
+  // ... (interpret and display prediction)
+}
+
+const video = document.getElementById('webcam');
+const liveView = document.getElementById('liveView');
+let model;
+// Load the model when the page loads
+loadModel().then(loadedModel => {
+  model = loadedModel;
+  console.log('Model loaded');
+});
+// Capture video frames and make predictions
+function predictFromWebcam() {
+  // ... (Capture frame, preprocess, predict, display) ...
+  if (model) { // Check if the model is loaded
+    const canvas = document.createElement('canvas'); // Create a canvas
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height); // Draw frame on canvas
+
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    const imageTensor = tf.browser.fromPixels(imageData); // Convert to tensor
+    predictEmotion(imageTensor).then(prediction => {
+  if (prediction.emotion === 'angry') {
+    // Display "Angry" prominently on the webpage
+    const angryAlert = document.createElement('div');
+    angryAlert.innerText = "Angry!";
+    angryAlert.style.fontSize = "24px";
+    angryAlert.style.color = "red";
+    liveView.appendChild(angryAlert);
+    } else {
+        const unrecognizedAlert = document.createElement('div');
+        unrecognizedAlert.innerText = "Unspecified!";
+        unrecognizedAlert.style.fontSize = "24px";
+        unrecognizedAlert.style.color = "red";
+        liveView.appendChild(unrecognizedAlert);
+    }
+    });
+   
+  }
+  requestAnimationFrame(predictFromVideo); // Loop for continuous prediction
+}
+
+// Start prediction when webcam is enabled
+document.getElementById('webcamButton').addEventListener('click', () => {
+  // ... (Enable webcam, start predictFromVideo) ...
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then((stream) => {
+      video.srcObject = stream;
+      video.addEventListener('loadeddata', predictWebcam); // Start prediction
+    })
+    .catch((error) => {
+      console.error('Error accessing webcam:', error);
+    });
+});
+
+
+  // ... (Rest of your JavaScript code for prediction and display) ...
+</script>
+
+  </body>
+</html>
+
+
