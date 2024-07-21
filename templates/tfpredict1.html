@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <metacharset="UTF-8" />
+    <title>Teachable Machine Image Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        // More API functions here:
+        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+    
+        // the link to your model provided by Teachable Machine export panel
+    
+        let tmModel1, webcam, labelContainer, maxPredictions;
+    
+        // Load the image model and setup the webcam
+        async function init()
+        {
+            const modelURL = "/static/tm-my-image-model/model.json";
+            const metadataURL = "/static/tm-my-image-model/metadata.json";
+    
+            // load the model and metadata
+            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+            // or files from your local hard drive
+            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+            tmModel1 = await tmImage.load(modelURL, metadataURL);
+            //model = await tf.loadLayersModel(modelURL, metadataURL);
+            maxPredictions = tmModel1.getTotalClasses();
+    
+            // Convenience function to setup a webcam
+            const flip = true; // whether to flip the webcam
+            webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+            await webcam.setup(); // request access to the webcam
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+    
+            // append elements to the DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            for (let i = 0; i < maxPredictions; i++)
+            { // and class labels
+                labelContainer.appendChild(document.createElement("div"));
+            }
+        }
+    
+        async function loop()
+        {
+            webcam.update(); // update the webcam frame
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+    
+        // run the webcam image through the image model
+        async function predict()
+        {
+            // predict can take in an image, video or canvas html element
+            const prediction = await tmModel1.predict(webcam.canvas);
+            for (let i = 0; i < maxPredictions; i++)
+            {
+                const classPrediction =
+                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                labelContainer.childNodes[i].innerHTML = classPrediction;
+            }
+        }
+    </script>
+    <style type="text/css">
+        .videoView {
+            position: relative;
+            float: left;
+            width: 48%;
+            margin: 2% 1%;
+            cursor: pointer;
+        }
+
+        .videoView p {
+            position: absolute;
+            padding: 5px;
+            background-color: rgba(255, 111, 0, 0.85);
+            color: #FFF;
+            border: 1px dashed rgba(255, 255, 255, 0.7);
+            z-index: 2;
+            font-size: 12px;
+            margin: 0;
+        }
+         
+        video {
+            clear: both;
+            display: block;
+            background: #000000;
+            width: 640px;
+            height: 480px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multiple image detection with ResNet50 in TensorFlow.js using saved model.</h1>
+    <h2>Webcam continuous image classification</h2>
+    <p>Hold face close to your webcam to get a real-time classification! When ready click "enable webcam" below and accept
+      access to the webcam when the browser asks (check the top left of your window)</p>
+    <section>
+      <div id="liveView" class="videoView">
+        <button type="button" onclick="init()">Start Webcam</button>
+        <div id="webcam-container" class="videoView"></div>
+        <div id="label-container"></div>
+      </div>
+    </section>
+</body>
+
+</html>

@@ -9,11 +9,13 @@ import requests
 from bs4 import BeautifulSoup
 from wsgiref.simple_server import WSGIServer
 from flask import Flask, redirect, render_template, url_for, request
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
-# define ML Model saved on Firebase storage
-#file = 'https://firebasestorage.googleapis.com/v0/b/inappvegetarian.appspot.com/o/filename.skops?alt=media&token=787bbd34-a73f-4175-a004-5196f8698231'
+
+#file = ''
 #clf = load(urllib.request.urlopen(file))
+price = 280000
 home_page = 'home.html'
 
 # declare the main route of the app
@@ -45,9 +47,8 @@ def index():
         salary = request.form['salary']
         tax =  request.form['tax']
         bonus =  request.form['bonus']
-        #record={"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
+        record={"Living_area": salary, "Bedrooms":tax, "Surface_plot":bonus}
         jprint(salary, tax, bonus )
-        price = 288
         #price = clf.predict([[key for key in record.values()]])
         return redirect(url_for('home', price = 'Predicted price ' + str(int(price))+ '€'))
     else:
@@ -80,7 +81,6 @@ def chart3():
         lst_data1 = pd.DataFrame(lst_data1)
         df = lst_data1.copy()
         headers=df.iloc[0]
-        #df  = pd.DataFrame(df.values[1:], columns=headers)
         df  = pd.DataFrame(df.to_numpy()[1:], columns=headers)
         df['Websites'] = df["Websites"].str.replace(',','')
         df['Websites'] = pd.to_numeric(df['Websites'])
@@ -93,9 +93,34 @@ def chart3():
         """
         return render_template('chart3.html', graphJSON=graph_json, header=header,description=description)
 
-@app.route('/images_predict')
-def images():
-    return render_template('images_predict.html')
+@app.route('/tfpredict1', methods = ['POST', 'GET'])
+def tfpredict1():
+    print("hello")
+    return render_template('tfpredict1.html')
+
+@app.route('/tfpredict', methods = ['POST', 'GET'])
+def tfpredict():
+    print("hello")
+    return render_template('tfpredict.html')
+
+@app.route('/testpredictimage', methods = ['POST', 'GET'])
+def testpredictimage():
+    print("hello")
+    return render_template('testpredictimage.html')
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # pass through HTTP errors
+    if isinstance(e, HTTPException):
+        return e
+    
+    # now you're handling non-HTTP exceptions only
+    return render_template("500_generic.html", e=e), 500
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.run()

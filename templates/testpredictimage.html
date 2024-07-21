@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Image Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  </head>
+
+  <body>
+    <h1>Image Prediction with MobileNet</h1>
+    <input type="file" id="imageUpload">
+    <img id="uploadedImage" src="/static/0238.png" alt="Uploaded Silhouete">
+    <div id="predictionResult"></div>
+
+    <script>
+      let model; // Declare model variable, but don't assign a value yet
+
+      async function loadModel()
+      {
+        const modelURL = 'https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v2_100_224/feature_vector/3/default/1';
+        try
+        {
+          console.log('Loading model from:', modelURL);
+          const baseModel = await tf.loadGraphModel(modelURL, { fromTFHub: true });
+          console.log('Base model loaded:', baseModel);
+
+          // Freeze base model layers
+          baseModel.trainable = false;
+
+          // Create custom classification head
+          const numClasses = 5; // Number of emotion classes
+          const classificationHead = tf.sequential(); // Create a separate model for the head
+          classificationHead.add(tf.layers.reshape({ targetShape: [1, 1, 1280], inputShape: [1280] })); // AddinputShape
+          classificationHead.add(tf.layers.flatten());
+          classificationHead.add(tf.layers.dense({ units: 256, activation: 'relu' }));
+          classificationHead.add(tf.layers.dense({ units: numClasses, activation: 'softmax' }));
+          console.log('Classification head created:', classificationHead);
+
+          // Combine base model and classification head (no need to add to a sequential model)
+          model = (input) => classificationHead.predict(baseModel.predict(input));
+
+          console.log('Combined model created:', model);
+        } catch (error)
+        {
+          console.log('Error loading model:', error);
+        }
+      }
+
+      function preprocessImage(image)
+      {
+        const reshapedImage = tf.browser.fromPixels(image)
+          .resizeNearestNeighbor([224, 224])
+          .toFloat()
+          .expandDims()
+          .div(127)
+          .sub(1); // Normalize to [-1, 1]
+        return reshapedImage;
+      }
+
+      async function predict(image)
+      {
+        if (!model)
+        {
+          console.error('Model not loaded yet.');
+          return;
+        }
+
+        const preprocessedImage = await preprocessImage(image);
+        const predictionTensor = await model(preprocessedImage);
+        const predictedIndex = predictionTensor.as1D().argMax().dataSync()[0];
+        const predictedEmotion = imagenetClasses[predictedIndex];
+
+        // Display prediction
+        const predictionResult = document.getElementById('predictionResult');
+        predictionResult.innerHTML = '';
+        const resultElement = document.createElement('p');
+        resultElement.innerText = `Predicted Emotion: ${predictedEmotion}`;
+        predictionResult.appendChild(resultElement);
+      }
+
+      // Main entry point (IIFE)
+      (async function ()
+      {
+        await loadModel(); // Wait for the model to load
+
+        const imageUpload = document.getElementById('imageUpload');
+        imageUpload.addEventListener('change', async (event) =>
+        {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+          reader.onload = async (e) =>
+          {
+            const image = new Image();
+            image.src = e.target.result;
+            image.onload = async () =>
+            {
+              await predict(image);
+              document.getElementById('uploadedImage').src = image.src; // Display the image
+            };
+          };
+          reader.readAsDataURL(file);
+        });
+      })();
+
+      // ImageNet class labels (replace with your own if needed)
+      const imagenetClasses = [
+        "Angry", "Fear", "Happy", "Neutral", "Sad"
+      ];
+    </script>
+  </body>
+
+  </html>
